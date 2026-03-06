@@ -1,0 +1,267 @@
+:root {
+  --bg: #f3f7fb;
+  --sidebar-bg: #001f35;
+  --sidebar-panel: #002b4a;
+  --sidebar-item: #003a62;
+  --sidebar-active: #0bb37d;
+  --sidebar-text: #d6e8f5;
+  --main-text: #123;
+  --card-bg: #fff;
+  --border: #d9e2ec;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+  color: var(--main-text);
+  background: var(--bg);
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 290px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  padding: 18px 0;
+  box-shadow: 4px 0 14px rgba(0, 0, 0, 0.18);
+}
+
+.brand {
+  text-align: center;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.2;
+  padding: 22px 12px 30px;
+  color: #fff;
+}
+
+.menu-item {
+  margin: 8px 8px;
+}
+
+.menu-link,
+.menu-group-title {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  cursor: pointer;
+  border-radius: 10px;
+  color: var(--sidebar-text);
+  background: transparent;
+  font-size: 34px;
+  padding: 22px 26px;
+  text-align: left;
+}
+
+.menu-link.active {
+  background: var(--sidebar-active);
+  color: #fff;
+}
+
+.menu-group {
+  background: #00192a;
+  border-radius: 10px;
+}
+
+.menu-group-title {
+  background: var(--sidebar-panel);
+}
+
+.menu-group-title .arrow {
+  transition: transform 0.2s;
+}
+
+.menu-group.open .menu-group-title .arrow {
+  transform: rotate(180deg);
+}
+
+.sub-menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.24s;
+}
+
+.menu-group.open .sub-menu {
+  max-height: 420px;
+}
+
+.sub-link {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--sidebar-text);
+  text-align: left;
+  font-size: 30px;
+  padding: 20px 46px;
+  cursor: pointer;
+}
+
+.sub-link.active {
+  color: #fff;
+  background: var(--sidebar-item);
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.topbar {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px 24px;
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.topbar h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+.topbar p {
+  margin: 0;
+  color: #4f5b67;
+}
+
+.table-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.table-card h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+
+.table-toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.btn {
+  border: 1px solid #2e5b8c;
+  color: #2e5b8c;
+  background: #f3f8ff;
+  padding: 7px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #0b66c2;
+  color: #fff;
+  border-color: #0b66c2;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid var(--border);
+  padding: 10px;
+  text-align: left;
+  font-size: 14px;
+}
+
+th {
+  background: #f0f5fa;
+}
+
+.tip {
+  font-size: 13px;
+  color: #66788a;
+  margin-top: 10px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.overview-card {
+  background: linear-gradient(135deg, #0f4b7d, #0f7d65);
+  color: #fff;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.overview-card p {
+  margin: 0;
+  opacity: 0.88;
+  font-size: 13px;
+}
+
+.overview-card h3 {
+  margin: 8px 0 4px;
+  font-size: 26px;
+}
+
+.overview-card small {
+  opacity: 0.85;
+}
+
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.quick-link {
+  border: 1px solid #b5cce2;
+  background: #f7fbff;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.quick-link strong {
+  display: block;
+  color: #124b80;
+  margin-bottom: 6px;
+}
+
+.quick-link span {
+  color: #4f6b84;
+  font-size: 13px;
+}
+
+.task-list {
+  display: grid;
+  gap: 8px;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fafcff;
+}
+
+.task-item em {
+  font-style: normal;
+  color: #526173;
+}
