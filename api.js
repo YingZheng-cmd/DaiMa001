@@ -40,3 +40,12 @@ const InventoryApi = {
 const SystemApi = {
   getUserList: () => request('/system/user/list')
 };
+
+const AiApi = {
+  getSummary: () => request('/ai/analysis/summary'),
+  runAnalysis: payload =>
+    request('/ai/analysis/run', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    })
+};

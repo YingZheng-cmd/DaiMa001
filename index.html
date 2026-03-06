@@ -66,6 +66,28 @@
 
         <article class="panel-card">
           <div class="panel-title-row">
+            <h3>各板块数据总览</h3>
+            <span>首页直观查看</span>
+          </div>
+          <div class="section-kpi-grid">
+            <div v-for="section in sectionMetrics" :key="section.name" class="section-kpi-card">
+              <h4>{{ section.name }}</h4>
+              <p>{{ section.main }}</p>
+              <small>{{ section.sub }}</small>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel-card ai-entry-card">
+          <div>
+            <h3>智能分析入口</h3>
+            <p>点击进入 AI 分析页面，可生成种植风险、产量趋势与经营建议（已预留后端 AI 接口）。</p>
+          </div>
+          <button class="btn btn-primary" type="button" @click="selectMenu('analysis')">进入智能分析</button>
+        </article>
+
+        <article class="panel-card">
+          <div class="panel-title-row">
             <h3>模块快捷入口</h3>
             <span>点击跳转</span>
           </div>
@@ -82,22 +104,34 @@
             </button>
           </div>
         </article>
+      </section>
 
+      <section v-else-if="activeKey === 'analysis'" class="analysis-page">
         <article class="panel-card">
           <div class="panel-title-row">
-            <h3>种植进度看板（示意）</h3>
-            <span>可替换为 ECharts</span>
+            <h3>智能分析中心</h3>
+            <span>AI 接口预留</span>
           </div>
-          <div class="progress-bars">
-            <div v-for="task in progress" :key="task.name" class="progress-item">
-              <div class="progress-head">
-                <span>{{ task.name }}</span>
-                <em>{{ task.value }}%</em>
-              </div>
-              <div class="bar-track">
-                <div class="bar-fill" :style="{ width: task.value + '%' }"></div>
-              </div>
-            </div>
+
+          <div class="analysis-actions">
+            <button class="btn" type="button" @click="fillPrompt('请分析近三个月病虫害变化与防治建议')">病虫害趋势分析</button>
+            <button class="btn" type="button" @click="fillPrompt('请预测下月采收量并给出采收计划建议')">产量预测分析</button>
+            <button class="btn" type="button" @click="fillPrompt('请评估仓储与销售节奏并给出优化建议')">经营优化分析</button>
+          </div>
+
+          <label class="prompt-label" for="analysisPrompt">分析指令</label>
+          <textarea id="analysisPrompt" v-model="analysisPrompt" class="prompt-input" placeholder="请输入分析需求，如：请按基地输出病虫害高风险区域与建议处理方案"></textarea>
+
+          <div class="analysis-run-row">
+            <button class="btn btn-primary" type="button" @click="runAnalysis" :disabled="analysisLoading">
+              {{ analysisLoading ? '分析中...' : '开始智能分析' }}
+            </button>
+            <span class="tip">接口预留：/api/ai/analysis/run</span>
+          </div>
+
+          <div class="analysis-result">
+            <h4>分析结果预览</h4>
+            <pre>{{ analysisResult }}</pre>
           </div>
         </article>
       </section>

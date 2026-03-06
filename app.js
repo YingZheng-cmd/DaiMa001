@@ -39,7 +39,8 @@ const menuData = [
     children: [
       { key: 'system-user', label: '用户管理', columns: ['用户编号', '姓名', '角色', '手机号', '状态'], apiHint: '/api/system/user/list' }
     ]
-  }
+  },
+  { key: 'analysis', label: '智能分析', type: 'single' }
 ];
 
 const allModules = menuData.flatMap(item => item.children || []);
@@ -61,16 +62,21 @@ createApp({
         system: true
       },
       stats: [
-        { name: '在管基地', value: '18', desc: '本月新增 2 个基地' },
-        { name: '树种批次', value: '256', desc: '待审核 6 条记录' },
-        { name: '病虫害告警', value: '7', desc: '高优先级 2 条' },
-        { name: '本月销售额', value: '¥ 362,500', desc: '同比增长 8.2%' }
+        { name: '在管基地', value: '18', desc: '较上周 +2' },
+        { name: '树种总数', value: '3,280', desc: '健康率 97.4%' },
+        { name: '待处理告警', value: '7', desc: '高优先级 2 条' },
+        { name: '本月销售额', value: '¥ 362,500', desc: '同比 +8.2%' }
       ],
-      progress: [
-        { name: '春季补种任务', value: 68 },
-        { name: '病虫害防治执行', value: 82 },
-        { name: '采收批次录入', value: 54 }
-      ]
+      sectionMetrics: [
+        { name: '种植管理', main: '基地 18 / 批次 62', sub: '今日新增批次 3 个' },
+        { name: '管护管理', main: '日常记录 126', sub: '病虫害待处理 7 条' },
+        { name: '采收加工', main: '采收单 41', sub: '待加工批次 9 个' },
+        { name: '仓储销售', main: '库存 14.2 吨', sub: '今日销售单 6 笔' },
+        { name: '系统管理', main: '活跃用户 23', sub: '在线 8 人' }
+      ],
+      analysisPrompt: '',
+      analysisLoading: false,
+      analysisResult: '等待分析任务执行。可输入指令后点击“开始智能分析”。'
     };
   },
   computed: {
@@ -78,20 +84,20 @@ createApp({
       return moduleMap[this.activeKey] || null;
     },
     currentTitle() {
-      return this.activeKey === 'home' ? '首页总览' : this.currentModule.label;
+      if (this.activeKey === 'home') return '首页总览';
+      if (this.activeKey === 'analysis') return '智能分析';
+      return this.currentModule.label;
     },
     currentSubtitle() {
-      return this.activeKey === 'home'
-        ? '可视化看板 + 快捷跳转（Vue 版本）'
-        : `${this.currentModule.label}（表格与接口占位，待后端联调）`;
+      if (this.activeKey === 'home') return '直观查看各板块关键数据与分析入口';
+      if (this.activeKey === 'analysis') return 'AI 分析中心（接口预留，可接入大模型服务）';
+      return `${this.currentModule.label}（表格与接口占位，待后端联调）`;
     },
     currentColumns() {
       return this.currentModule ? this.currentModule.columns : [];
     },
     currentRows() {
-      if (!this.currentModule) {
-        return [];
-      }
+      if (!this.currentModule) return [];
 
       return Array.from({ length: 5 }, (_, rowIndex) =>
         this.currentModule.columns.map((column, colIndex) => `${column}${rowIndex + colIndex + 1}`)
@@ -107,6 +113,31 @@ createApp({
     },
     selectMenu(key) {
       this.activeKey = key;
+    },
+    fillPrompt(text) {
+      this.analysisPrompt = text;
+    },
+    async runAnalysis() {
+      if (!this.analysisPrompt.trim()) {
+        this.analysisResult = '请输入分析指令后再执行。';
+        return;
+      }
+
+      this.analysisLoading = true;
+      this.analysisResult = 'AI 分析中，请稍候...';
+
+      try {
+        if (typeof AiApi !== 'undefined' && AiApi.runAnalysis) {
+          const result = await AiApi.runAnalysis({ prompt: this.analysisPrompt });
+          this.analysisResult = JSON.stringify(result, null, 2);
+        } else {
+          this.analysisResult = 'AiApi 未加载，请检查 api.js。';
+        }
+      } catch (error) {
+        this.analysisResult = `接口暂不可用，已预留联调位置。\n\n请求: POST /api/ai/analysis/run\n参数: { prompt: string }\n\n错误信息: ${error.message}`;
+      } finally {
+        this.analysisLoading = false;
+      }
     }
   }
 }).mount('#app');
