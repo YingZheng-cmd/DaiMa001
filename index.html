@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>莞香种植管理系统</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app" class="app-layout">
+    <aside class="sidebar">
+      <div class="brand-wrap">
+        <h1 class="brand">莞香种植管理系统</h1>
+        <p class="brand-sub">Aquilariaceae Plantation Platform</p>
+      </div>
+
+      <nav class="menu" aria-label="主导航">
+        <div v-for="item in menuData" :key="item.key" class="menu-item">
+          <button
+            v-if="item.type === 'single'"
+            class="menu-link"
+            :class="{ active: activeKey === item.key }"
+            @click="selectMenu(item.key)"
+            type="button"
+          >
+            {{ item.label }}
+          </button>
+
+          <div v-else class="menu-group" :class="{ open: openGroups[item.key] }">
+            <button class="menu-group-title" type="button" @click="toggleGroup(item.key)">
+              <span>{{ item.label }}</span>
+              <span class="arrow">⌃</span>
+            </button>
+
+            <div class="sub-menu">
+              <button
+                v-for="sub in item.children"
+                :key="sub.key"
+                class="sub-link"
+                :class="{ active: activeKey === sub.key }"
+                type="button"
+                @click="selectMenu(sub.key)"
+              >
+                {{ sub.label }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <h2>{{ currentTitle }}</h2>
+        <p>{{ currentSubtitle }}</p>
+      </header>
+
+      <section v-if="activeKey === 'home'" class="home-page">
+        <section class="dashboard-grid">
+          <article v-for="card in stats" :key="card.name" class="overview-card">
+            <p>{{ card.name }}</p>
+            <h3>{{ card.value }}</h3>
+            <small>{{ card.desc }}</small>
+          </article>
+        </section>
+
+        <article class="panel-card">
+          <div class="panel-title-row">
+            <h3>模块快捷入口</h3>
+            <span>点击跳转</span>
+          </div>
+          <div class="quick-links">
+            <button
+              v-for="module in allModules"
+              :key="module.key"
+              class="quick-link"
+              type="button"
+              @click="selectMenu(module.key)"
+            >
+              <strong>{{ module.label }}</strong>
+              <small>{{ module.apiHint }}</small>
+            </button>
+          </div>
+        </article>
+
+        <article class="panel-card">
+          <div class="panel-title-row">
+            <h3>种植进度看板（示意）</h3>
+            <span>可替换为 ECharts</span>
+          </div>
+          <div class="progress-bars">
+            <div v-for="task in progress" :key="task.name" class="progress-item">
+              <div class="progress-head">
+                <span>{{ task.name }}</span>
+                <em>{{ task.value }}%</em>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" :style="{ width: task.value + '%' }"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section v-else class="panel-card">
+        <div class="table-toolbar">
+          <button class="btn btn-primary" type="button">新增</button>
+          <button class="btn" type="button">查询</button>
+          <button class="btn" type="button">导出</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th v-for="column in currentColumns" :key="column">{{ column }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, rowIndex) in currentRows" :key="rowIndex">
+              <td v-for="(cell, cellIndex) in row" :key="`${rowIndex}-${cellIndex}`">{{ cell }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="tip">接口预留：{{ currentApiPath }}</p>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="api.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
