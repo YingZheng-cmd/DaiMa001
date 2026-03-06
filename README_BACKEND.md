@@ -44,3 +44,9 @@ POST 示例：
   "prompt": "请分析近三个月病虫害变化与防治建议"
 }
 ```
+
+
+## 5. 前后端代码标记
+- 前端文件：`index.html`、`styles.css`、`app.js`、`api.js`
+- 后端文件：`pom.xml`、`src/main/java/**`、`src/main/resources/**`
+- 详细说明见：`README_CODE_MAP.md`
